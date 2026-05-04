@@ -6,13 +6,13 @@ import postsRouter from "./posts.js";
 import messagesRouter from "./messages.js";
 import healthRouter from "./health.js";
 
-
 const router = Router();
 
-router.use(healthRouter);
-router.use(authRouter);
-router.use(usersRouter);
-router.use(postsRouter);
-router.use(messagesRouter);
+// ✅ mount each router with prefix
+router.use("/auth", authRouter);
+router.use("/users", usersRouter);
+router.use("/posts", postsRouter);
+router.use("/messages", messagesRouter);
+router.use("/", healthRouter);
 
 export default router;
