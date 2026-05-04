@@ -1,3 +1,4 @@
+const API_BASE = "https://unifyme-1.onrender.com";
 async function request(method, path, body) {
   const opts = {
     method,
@@ -8,7 +9,7 @@ async function request(method, path, body) {
     opts.headers['Content-Type'] = 'application/json';
     opts.body = JSON.stringify(body);
   }
-  const res = await fetch('/api' + path, opts);
+  const res = await fetch(API_BASE + '/api' + path, opts);
   let data;
   try { data = await res.json(); } catch { data = {}; }
   if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
