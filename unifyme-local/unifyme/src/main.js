@@ -11,6 +11,10 @@ import { mountChat } from './pages/chat.js';
 import { navigate } from './utils.js';
 
 const app = document.getElementById('app');
+
+// 🔥 DEBUG (helps detect blank issue)
+console.log("APP ELEMENT:", app);
+
 let currentUnmount = null;
 
 function getPath() {
@@ -29,42 +33,73 @@ function parseRoute(path) {
 }
 
 function getNavPath(routeName) {
-  const map = { feed: '/', search: '/search', profile: '/profile', messages: '/messages', chat: '/messages' };
+  const map = {
+    feed: '/',
+    search: '/search',
+    profile: '/profile',
+    messages: '/messages',
+    chat: '/messages',
+  };
   return map[routeName] || '/';
 }
 
 async function route() {
-  // Cleanup current page
-  if (currentUnmount) { currentUnmount(); currentUnmount = null; }
+  // cleanup
+  if (currentUnmount) {
+    currentUnmount();
+    currentUnmount = null;
+  }
 
   const path = getPath();
   const user = auth.user;
 
+  // 🔥 NOT LOGGED IN
   if (!user) {
     app.innerHTML = '';
+
     currentUnmount = mountLogin(app, (loggedInUser) => {
+      if (!loggedInUser) {
+        console.log("Login failed");
+        return;
+      }
+
       auth.user = loggedInUser;
+
+      // 🔥 FORCE HOME
+      window.location.hash = "/";
+
       renderAppShell(loggedInUser);
       route();
     });
+
     return;
   }
 
+  // 🔥 Logged in
   const parsed = parseRoute(path);
+
+  // ensure layout exists
+  if (!document.getElementById('main-content')) {
+    renderAppShell(user);
+  }
+
   updateActiveNav(getNavPath(parsed.name));
 
-  const main = document.getElementById('main-content');
-  if (!main) { renderAppShell(user); }
   const container = document.getElementById('main-content');
-  if (!container) return;
+  if (!container) {
+    console.log("MAIN CONTENT NOT FOUND");
+    return;
+  }
 
   switch (parsed.name) {
     case 'feed':
       currentUnmount = mountFeed(container, openCreatePost);
       break;
+
     case 'search':
       currentUnmount = mountSearch(container);
       break;
+
     case 'profile':
       if (parsed.username) {
         currentUnmount = mountProfile(container, parsed.username);
@@ -72,12 +107,15 @@ async function route() {
         navigate('/');
       }
       break;
+
     case 'messages':
       currentUnmount = mountMessages(container);
       break;
+
     case 'chat':
       currentUnmount = mountChat(container, parsed.username);
       break;
+
     default:
       currentUnmount = mountFeed(container, openCreatePost);
   }
@@ -90,12 +128,18 @@ function renderAppShell(user) {
 
 function openCreatePost() {
   mountCreatePostModal(() => {
-    // Reload feed if we're on it
     const path = getPath();
+
     if (path === '/' || path === '') {
-      if (currentUnmount) { currentUnmount(); currentUnmount = null; }
+      if (currentUnmount) {
+        currentUnmount();
+        currentUnmount = null;
+      }
+
       const container = document.getElementById('main-content');
-      if (container) currentUnmount = mountFeed(container, openCreatePost);
+      if (container) {
+        currentUnmount = mountFeed(container, openCreatePost);
+      }
     }
   });
 }
@@ -103,14 +147,19 @@ function openCreatePost() {
 async function init() {
   try {
     const data = await api.auth.getUser();
+
     if (data.user) {
       auth.user = data.user;
       renderAppShell(data.user);
     }
-  } catch {}
+  } catch (err) {
+    console.log("User fetch failed");
+  }
+
   route();
 }
 
 window.addEventListener('hashchange', route);
 window.navigate = navigate;
+
 init();
