@@ -1,9 +1,9 @@
-const API_BASE = "https://unifyme-1.onrender.com";
+const API_BASE = "https://unifyme-3.onrender.com";
 
 async function request(method, path, body) {
   const res = await fetch(API_BASE + "/api" + path, {
     method,
-    credentials: "include", // 🔥 REQUIRED
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

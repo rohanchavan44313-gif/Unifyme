@@ -1,36 +1,25 @@
-import { Router } from "express";
-import jwt from "jsonwebtoken";
-import type { Response } from "express";
-
-const JWT_SECRET = process.env.JWT_SECRET || "secret";
-
-// ✅ Create token
-export function signToken(payload: { userId: string; username: string }) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
-}
-
-// ✅ SET COOKIE (FIXES YOUR ISSUE)
-export function setSessionCookie(res: Response, token: string) {
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true,       // 🔥 required for production
-    sameSite: "none",   // 🔥 required for Netlify ↔ Render
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-  });
-}
-
-// ✅ CLEAR COOKIE
-export function clearSessionCookie(res: Response) {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
-}
+import { Router, type Request, type Response } from "express";
 
 const router = Router();
 
-// ... all your routes ...
+// ✅ REGISTER
+router.post("/register", (req: Request, res: Response) => {
+  res.json({ message: "register works" });
+});
+
+// ✅ LOGIN
+router.post("/login", (req: Request, res: Response) => {
+  res.json({ message: "login works" });
+});
+
+// ✅ USER
+router.get("/user", (_req: Request, res: Response) => {
+  res.json({ user: null });
+});
+
+// ✅ LOGOUT
+router.get("/logout", (_req: Request, res: Response) => {
+  res.json({ success: true });
+});
 
 export default router;
-console.log("AUTH ROUTER LOADED");

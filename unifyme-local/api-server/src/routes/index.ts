@@ -8,11 +8,11 @@ import healthRouter from "./health.js";
 
 const router = Router();
 
-// ✅ mount each router with prefix
+// mount properly
 router.use("/auth", authRouter);
 router.use("/users", usersRouter);
 router.use("/posts", postsRouter);
 router.use("/messages", messagesRouter);
-router.use("/", healthRouter);
+router.use("/health", healthRouter);
 
 export default router;
