@@ -36,3 +36,7 @@ app.get("/", (_req, res) => {
 });
 
 export default app;
+
+app.get("/", (_req, res) => {
+  res.send("API is running 🚀");
+});
