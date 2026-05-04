@@ -2,12 +2,13 @@ import "dotenv/config";
 import app from "./app.js";
 import { connectDB } from "./lib/db.js";
 
-const port = Number(process.env.PORT) || 3001;
+const PORT = Number(process.env.PORT) || 3000;
 
 async function main() {
   await connectDB();
-  app.listen(port, () => {
-    console.log(`🚀 API server listening on http://localhost:${port}`);
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Server running on port ${PORT}`);
   });
 }
 
