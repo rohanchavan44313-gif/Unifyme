@@ -1,0 +1,10 @@
+{
+  "name": "unifyme-local",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:api": "cd api-server && npm run dev",
+    "dev:web": "cd unifyme && npm run dev",
+    "install:all": "cd api-server && npm install && cd ../unifyme && npm install"
+  }
+}
