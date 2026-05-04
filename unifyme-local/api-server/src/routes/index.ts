@@ -6,6 +6,7 @@ import postsRouter from "./posts.js";
 import messagesRouter from "./messages.js";
 import healthRouter from "./health.js";
 
+
 const router = Router();
 
 router.use(healthRouter);
