@@ -7,32 +7,32 @@ import router from "./routes/index.js";
 
 const app = express();
 
-// ✅ CORS (ONLY ONE — supports local + production)
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://jocular-taffy-53bc4e.netlify.app"
-];
+// ✅ frontend URL (Netlify)
+const CLIENT_URL =
+  process.env.CLIENT_URL || "https://jocular-taffy-53bc4e.netlify.app";
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
+// ✅ SINGLE correct CORS setup
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+  })
+);
 
-// ✅ Middlewares
+// ✅ middlewares
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-// ✅ Auth middleware
+// ✅ auth
 app.use(authMiddleware);
 
-// ✅ Routes
+// ✅ routes
 app.use("/api", router);
+
+// ✅ optional test route (good for debugging)
+app.get("/", (_req, res) => {
+  res.send("API is running 🚀");
+});
 
 export default app;
