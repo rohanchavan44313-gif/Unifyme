@@ -7,12 +7,12 @@ const PORT = Number(process.env.PORT) || 3000;
 async function main() {
   await connectDB();
 
-  app.listen(PORT, "0.0.0.0", () => {
+  app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 }
 
 main().catch((err) => {
-  console.error("Failed to start server:", err);
+  console.error("Server failed:", err);
   process.exit(1);
 });

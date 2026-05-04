@@ -1,31 +1,35 @@
+import { Router } from "express";
 import jwt from "jsonwebtoken";
 import type { Response } from "express";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET environment variable is required");
-}
+const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
-// ✅ create token
+// ✅ Create token
 export function signToken(payload: { userId: string; username: string }) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 }
 
-// ✅ set cookie (FIXED)
+// ✅ SET COOKIE (FIXES YOUR ISSUE)
 export function setSessionCookie(res: Response, token: string) {
   res.cookie("token", token, {
     httpOnly: true,
-    secure: true,              // 🔥 required for HTTPS (Netlify + Render)
-    sameSite: "none" as const, // 🔥 must be lowercase + TS fix
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    secure: true,       // 🔥 required for production
+    sameSite: "none",   // 🔥 required for Netlify ↔ Render
+    maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 }
 
-// ✅ clear cookie
+// ✅ CLEAR COOKIE
 export function clearSessionCookie(res: Response) {
   res.clearCookie("token", {
     httpOnly: true,
     secure: true,
-    sameSite: "none" as const,
+    sameSite: "none",
   });
 }
+
+const router = Router();
+
+// ... all your routes ...
+
+export default router;

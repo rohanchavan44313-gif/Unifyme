@@ -7,11 +7,10 @@ import router from "./routes/index.js";
 
 const app = express();
 
-// ✅ frontend URL (Netlify)
-const CLIENT_URL =
-  process.env.CLIENT_URL || "https://jocular-taffy-53bc4e.netlify.app";
+// ✅ FRONTEND URL (Netlify)
+const CLIENT_URL = "https://jocular-taffy-53bc4e.netlify.app";
 
-// ✅ CORS (ONLY once)
+// ✅ CORS (VERY IMPORTANT)
 app.use(
   cors({
     origin: CLIENT_URL,
@@ -19,17 +18,17 @@ app.use(
   })
 );
 
-// ✅ middlewares
+// ✅ Middlewares
 app.use(cookieParser());
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// ✅ test route (ROOT)
+// ✅ ROOT TEST ROUTE
 app.get("/", (_req, res) => {
   res.send("API is running 🚀");
 });
 
-// ✅ auth middleware
+// ✅ Auth middleware
 app.use(authMiddleware);
 
 // ✅ API routes
