@@ -11,7 +11,7 @@ const app = express();
 const CLIENT_URL =
   process.env.CLIENT_URL || "https://jocular-taffy-53bc4e.netlify.app";
 
-// ✅ SINGLE correct CORS setup
+// ✅ CORS (ONLY once)
 app.use(
   cors({
     origin: CLIENT_URL,
@@ -24,19 +24,15 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-// ✅ auth
+// ✅ test route (ROOT)
+app.get("/", (_req, res) => {
+  res.send("API is running 🚀");
+});
+
+// ✅ auth middleware
 app.use(authMiddleware);
 
-// ✅ routes
+// ✅ API routes
 app.use("/api", router);
 
-// ✅ optional test route (good for debugging)
-app.get("/", (_req, res) => {
-  res.send("API is running 🚀");
-});
-
 export default app;
-
-app.get("/", (_req, res) => {
-  res.send("API is running 🚀");
-});
