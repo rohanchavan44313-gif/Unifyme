@@ -33,3 +33,4 @@ const router = Router();
 // ... all your routes ...
 
 export default router;
+console.log("AUTH ROUTER LOADED");
